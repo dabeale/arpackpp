@@ -345,10 +345,10 @@ StlEigenvalues(bool ivec, bool ischur)
   vector<ARFLOAT>* StlEigValR;
   ARFLOAT*         ValPtr;
 
-  try { StlEigValR = new vector<ARFLOAT>(ValSize()); }
+  try { StlEigValR = new vector<ARFLOAT>(this->ValSize()); }
   catch (ArpackError) { return NULL; }
-  ValPtr = StlEigValR->begin();
-  nconv = Eigenvalues(ValPtr, ivec, ischur);
+  ValPtr = &*StlEigValR->begin();
+  this->nconv = Eigenvalues(ValPtr, ivec, ischur);
   return StlEigValR;
 
 } // StlEigenvalues.
@@ -362,14 +362,14 @@ inline vector<ARFLOAT>* ARrcSymStdEig<ARFLOAT>::StlEigenvector(int i)
 
   vector<ARFLOAT>* Vec;
 
-  if (!VectorsOK) {
+  if (!this->VectorsOK) {
     throw ArpackError(ArpackError::VECTORS_NOT_OK, "StlEigenvector(i)");
   }
-  else if ((i>=ValSize())||(i<0)) {
+  else if ((i>=this->ValSize())||(i<0)) {
     throw ArpackError(ArpackError::RANGE_ERROR, "StlEigenvector(i)");
   }
   try {
-    Vec = new vector<ARFLOAT>(&EigVec[i*n], &EigVec[(i+1)*n]);
+    Vec = new vector<ARFLOAT>(&this->EigVec[i*this->n], &this->EigVec[(i+1)*this->n]);
   }
   catch (ArpackError) { return NULL; }
   return Vec;
